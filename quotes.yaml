@@ -17,6 +17,7 @@ general_schedules:
   - cron: "0 9,13,17 * * *"
     category: focus
   - cron: "30 11 * * MON-FRI"
+  - cron: "*/30 * * * *"
 
 quotes:
   # `media` is a list of URLs (pictures or YouTube videos). The first entry is

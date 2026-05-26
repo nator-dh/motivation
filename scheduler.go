@@ -112,7 +112,7 @@ func (s *Scheduler) fireQuote(q Quote) {
 	if len(q.Media) > 0 {
 		openURL = q.Media[0]
 	}
-	if err := s.notifier.Notify(q.Author, q.Text, openURL); err != nil {
+	if err := s.notifier.Notify(q.Author, q.Text, openURL, RandomEmoji()); err != nil {
 		log.Printf("notify error: %v", err)
 	}
 }

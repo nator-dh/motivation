@@ -61,7 +61,7 @@ func (srv *Server) handleReload(w http.ResponseWriter, r *http.Request) {
 }
 
 func (srv *Server) handleTest(w http.ResponseWriter, r *http.Request) {
-	if err := srv.notifier.Notify("Motivation", "Test notification — you're all set.", ""); err != nil {
+	if err := srv.notifier.Notify("Motivation", "Test notification — you're all set.", "", RandomEmoji()); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
