@@ -68,13 +68,6 @@ func renderEmoji(_ emoji: String, side: CGFloat = 512) -> (NSImage, Data)? {
     return (image, png)
 }
 
-// writePNGToTmp writes PNG bytes to a unique temp file and returns its URL.
-func writePNGToTmp(_ png: Data) -> URL? {
-    let tmp = FileManager.default.temporaryDirectory
-        .appendingPathComponent("motivation-emoji-\(UUID().uuidString).png")
-    do { try png.write(to: tmp); return tmp } catch { return nil }
-}
-
 // swapBundleIcon overwrites this app's Contents/Resources/AppIcon.png with
 // the rendered emoji and touches the bundle so LaunchServices invalidates
 // its cached icon for com.motivation.notifier. Notification Center is
@@ -143,10 +136,6 @@ if let e = args.emoji, !e.isEmpty, let (image, png) = renderEmoji(e) {
     // Also set the running-process icon — Notification Center sometimes
     // reads this when posting from the same process that owns the icon.
     NSApplication.shared.applicationIconImage = image
-    if let pngURL = writePNGToTmp(png),
-       let att = try? UNNotificationAttachment(identifier: "emoji-icon", url: pngURL) {
-        content.attachments = [att]
-    }
 }
 
 let req = UNNotificationRequest(
