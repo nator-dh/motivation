@@ -20,43 +20,137 @@ general_schedules:
   - cron: "*/30 * * * *"
 
 quotes:
-  # `media` is a list of URLs (pictures or YouTube videos). The first entry is
-  # what clicking the notification opens (terminal-notifier supports only one
-  # target); the dashboard lists all entries as numbered links.
   - id: marcus-mind
     text: "You have power over your mind — not outside events. Realize this, and you will find strength."
     author: Marcus Aurelius
     categories: [stoic, focus]
     media:
-      - https://en.wikipedia.org/wiki/Meditations
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=You+have+power+over+your+mind+-+Marcus+Aurelius
     schedules:
-      - "0 8 * * MON"
+      - "0 6 * * MON"
 
   - id: jobs-stay-hungry
     text: "Stay hungry. Stay foolish."
     author: Steve Jobs
     categories: [drive]
     media:
-      - https://www.youtube.com/watch?v=UF8uR6Z6KLc
-      - https://en.wikipedia.org/wiki/Steve_Jobs
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=Stay+hungry.+Stay+foolish.+-+Steve+Jobs
+    schedules:
+      - "0 8 * * MON"
 
-  - id: seneca-tomorrow
-    text: "Begin at once to live, and count each separate day as a separate life."
-    author: Seneca
-    categories: [stoic, focus]
+  - id: denzel-ease
+    text: "Without commitment, you'll never start, but more importantly, without consistency, you'll never finish."
+    author: Denzel Washington
+    categories: [drive, focus, craft]
     media:
-      - https://en.wikipedia.org/wiki/Seneca_the_Younger
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=Without+consistency+you+will+never+finish.+-+Denzel+Washington
+    schedules:
+      - "0 6 * * TUE"
 
   - id: jordan-fail
     text: "I've failed over and over and over again in my life. And that is why I succeed."
     author: Michael Jordan
     categories: [drive, resilience]
     media:
-      - https://www.youtube.com/watch?v=GuXZFQKKF7A
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=I+fail+over+and+over+again+and+that+is+why+I+succeed.+-+MJ
+    schedules:
+      - "0 8 * * TUE"
 
   - id: feynman-fool
     text: "The first principle is that you must not fool yourself — and you are the easiest person to fool."
     author: Richard Feynman
     categories: [focus, craft]
     media:
-      - https://en.wikipedia.org/wiki/Richard_Feynman
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=You+must+not+fool+yourself.+-+Richard+Feynman
+    schedules:
+      - "0 6 * * WED"
+
+  - id: churchill-going
+    text: "If you are going through hell, keep going."
+    author: Winston Churchill
+    categories: [resilience]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=If+you+are+going+through+hell+keep+going.+-+Churchill
+    schedules:
+      - "0 8 * * WED"
+
+  - id: dynamic-disney
+    text: "The way to get started is to quit talking and begin doing."
+    author: Walt Disney
+    categories: [drive, craft]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=Quit+talking+and+begin+doing.+-+Walt+Disney
+    schedules:
+      - "0 6 * * THU"
+
+  - id: aristotle-excellence
+    text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit."
+    author: Aristotle
+    categories: [craft, focus]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=Excellence+is+not+an+act+but+a+habit.+-+Aristotle
+    schedules:
+      - "0 8 * * THU"
+
+  - id: mandela-impossible
+    text: "It always seems impossible until it's done."
+    author: Nelson Mandela
+    categories: [resilience, drive]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=It+always+seems+impossible+until+it+s+done.+-+Mandela
+    schedules:
+      - "0 6 * * FRI"
+
+  - id: ford-think
+    text: "Whether you think you can or you think you can't, you're right."
+    author: Henry Ford
+    categories: [focus, drive]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=Whether+you+think+you+can+or+can+t+you+re+right.+-+Henry+Ford
+    schedules:
+      - "0 8 * * FRI"
+
+  - id: tyson-plan
+    text: "Everyone has a plan 'till they get punched in the mouth."
+    author: Mike Tyson
+    categories: [resilience]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=Everyone+has+a+plan+till+they+get+punched+in+the+mouth.+-+Tyson
+    schedules:
+      - "0 9 * * SAT"
+
+  - id: james-habit
+    text: "Every action you take is a vote for the type of person you wish to become."
+    author: James Clear
+    categories: [focus, craft]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=Every+action+is+a+vote+for+who+you+wish+to+become.+-+James+Clear
+    schedules:
+      - "0 11 * * SAT"
+
+  - id: sandberg-done
+    text: "Done is better than perfect."
+    author: Sheryl Sandberg
+    categories: [craft, drive]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=Done+is+better+than+perfect.+-+Sheryl+Sandberg
+    schedules:
+      - "0 9 * * SUN"
+
+  - id: gautama-mind
+    text: "The mind is everything. What you think you become."
+    author: Gautama Buddha
+    categories: [wisdom, focus]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=The+mind+is+everything.+What+you+think+you+become.+-+Buddha
+    schedules:
+      - "0 11 * * SUN"
+
+  - id: lowe-finish
+    text: "The secret of getting ahead is getting started."
+    author: Mark Twain
+    categories: [drive, focus]
+    media:
+      - https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=The+secret+of+getting+ahead+is+getting+started.+-+Mark+Twain
+    schedules:
+      - "0 13 * * SUN"
