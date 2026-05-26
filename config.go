@@ -21,7 +21,7 @@ type Quote struct {
 	Text       string   `yaml:"text" json:"text"`
 	Author     string   `yaml:"author" json:"author"`
 	Categories []string `yaml:"categories,omitempty" json:"categories,omitempty"`
-	Media      string   `yaml:"media,omitempty" json:"media,omitempty"`
+	Media      []string `yaml:"media,omitempty" json:"media,omitempty"`
 	Schedules  []string `yaml:"schedules,omitempty" json:"schedules,omitempty"`
 }
 

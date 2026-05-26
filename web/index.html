@@ -144,7 +144,10 @@ async function load() {
     const tr = document.createElement('tr');
     const cats = (q.categories || []).map(c => `<span>${c}</span>`).join('');
     const scheds = (q.schedules || []).map(c => `<span>${c}</span>`).join('') || '<span style="opacity:0.5">—</span>';
-    const media = q.media ? `<a href="${q.media}" target="_blank">open</a>` : '';
+    const mediaList = Array.isArray(q.media) ? q.media : (q.media ? [q.media] : []);
+    const media = mediaList.length
+      ? mediaList.map((u, i) => `<a href="${u}" target="_blank">${i + 1}</a>`).join(' ')
+      : '';
     tr.innerHTML = `
       <td><span class="id">${q.id}</span></td>
       <td class="quote">${q.text}<div class="author">— ${q.author || 'unknown'}</div></td>

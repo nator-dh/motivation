@@ -4,7 +4,23 @@
       "Bash(go get *)",
       "Bash(go mod *)",
       "Bash(go build *)",
-      "Bash(go vet *)"
+      "Bash(go vet *)",
+      "Bash(make help *)",
+      "Bash(make build *)",
+      "Bash(make clean *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/codemap-reminder.sh"
+          }
+        ]
+      }
     ]
   }
 }

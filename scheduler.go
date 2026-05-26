@@ -108,7 +108,11 @@ func (s *Scheduler) Reload() error {
 
 func (s *Scheduler) fireQuote(q Quote) {
 	log.Printf("fire quote %s (%s)", q.ID, q.Author)
-	if err := s.notifier.Notify(q.Author, q.Text, q.Media); err != nil {
+	var openURL string
+	if len(q.Media) > 0 {
+		openURL = q.Media[0]
+	}
+	if err := s.notifier.Notify(q.Author, q.Text, openURL); err != nil {
 		log.Printf("notify error: %v", err)
 	}
 }
