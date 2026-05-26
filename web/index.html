@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Motivation</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #181b22;
+    --border: #262a33;
+    --text: #e6e8ee;
+    --muted: #8a93a6;
+    --accent: #f5b945;
+    --accent-dim: #3a2e12;
+    --ok: #5fd17a;
+    --err: #ff6b6b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    background: var(--bg); color: var(--text);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  }
+  h1 { font-weight: 600; margin: 0 0 4px; font-size: 22px; }
+  .sub { color: var(--muted); margin-bottom: 24px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  button {
+    background: var(--panel); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 8px 14px; cursor: pointer; font: inherit;
+  }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  section { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+  h2 { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; }
+  tr:last-child td { border-bottom: none; }
+  .id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--accent); }
+  .quote { max-width: 420px; }
+  .author { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .cats span, .scheds span {
+    display: inline-block; padding: 2px 8px; border-radius: 99px;
+    background: #20242d; color: var(--muted); font-size: 11px; margin: 2px 4px 2px 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .next { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--muted); }
+  a { color: var(--accent); }
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--panel); border: 1px solid var(--border);
+    padding: 10px 16px; border-radius: 6px; opacity: 0;
+    transition: opacity 0.2s; pointer-events: none;
+  }
+  #toast.show { opacity: 1; }
+  #toast.ok { border-color: var(--ok); }
+  #toast.err { border-color: var(--err); }
+</style>
+</head>
+<body>
+  <h1>Motivation</h1>
+  <div class="sub">Curated reminders so the day doesn't drift.</div>
+
+  <div class="row">
+    <button class="primary" onclick="action('/api/test', 'POST')">Test notification</button>
+    <button onclick="action('/api/reload', 'POST')">Reload config</button>
+    <button onclick="load()">Refresh view</button>
+  </div>
+
+  <section>
+    <h2>General schedules</h2>
+    <table id="general"><thead>
+      <tr><th>Cron</th><th>Category filter</th><th>Next run</th></tr>
+    </thead><tbody></tbody></table>
+  </section>
+
+  <section>
+    <h2>Quotes</h2>
+    <table id="quotes"><thead>
+      <tr><th>ID</th><th>Quote</th><th>Categories</th><th>Schedules</th><th>Next run</th><th>Media</th><th></th></tr>
+    </thead><tbody></tbody></table>
+  </section>
+
+  <div id="toast"></div>
+
+<script>
+const toast = document.getElementById('toast');
+function flash(msg, kind) {
+  toast.textContent = msg;
+  toast.className = 'show ' + (kind || '');
+  setTimeout(() => toast.className = '', 2200);
+}
+async function action(path, method) {
+  try {
+    const r = await fetch(path, { method });
+    if (!r.ok) throw new Error(await r.text());
+    flash('OK', 'ok');
+    load();
+  } catch (e) {
+    flash('Error: ' + e.message, 'err');
+  }
+}
+function fmtTime(iso) {
+  if (!iso || iso.startsWith('0001')) return '—';
+  const d = new Date(iso);
+  const now = new Date();
+  const same = d.toDateString() === now.toDateString();
+  const t = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return same ? `today ${t}` : `${d.toLocaleDateString([], {month:'short', day:'numeric'})} ${t}`;
+}
+async function load() {
+  const r = await fetch('/api/state');
+  const s = await r.json();
+
+  const gen = document.querySelector('#general tbody');
+  gen.innerHTML = '';
+  const entries = s.entries || [];
+  const generals = entries.filter(e => e.kind === 'general');
+  if (generals.length === 0) {
+    gen.innerHTML = '<tr><td colspan="3" style="color:var(--muted)">No general schedules configured.</td></tr>';
+  } else for (const e of generals) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><span class="id">${e.cron}</span></td>
+      <td>${e.category || '<span style="color:var(--muted)">(any)</span>'}</td>
+      <td class="next">${fmtTime(e.next_run)}</td>`;
+    gen.appendChild(tr);
+  }
+
+  // map quote id -> next run from quote-specific entries
+  const nextByQuote = {};
+  for (const e of entries) {
+    if (e.kind === 'quote' && e.quote_id) {
+      const cur = nextByQuote[e.quote_id];
+      if (!cur || new Date(e.next_run) < new Date(cur)) {
+        nextByQuote[e.quote_id] = e.next_run;
+      }
+    }
+  }
+
+  const tb = document.querySelector('#quotes tbody');
+  tb.innerHTML = '';
+  for (const q of (s.quotes || [])) {
+    const tr = document.createElement('tr');
+    const cats = (q.categories || []).map(c => `<span>${c}</span>`).join('');
+    const scheds = (q.schedules || []).map(c => `<span>${c}</span>`).join('') || '<span style="opacity:0.5">—</span>';
+    const media = q.media ? `<a href="${q.media}" target="_blank">open</a>` : '';
+    tr.innerHTML = `
+      <td><span class="id">${q.id}</span></td>
+      <td class="quote">${q.text}<div class="author">— ${q.author || 'unknown'}</div></td>
+      <td class="cats">${cats}</td>
+      <td class="scheds">${scheds}</td>
+      <td class="next">${fmtTime(nextByQuote[q.id])}</td>
+      <td>${media}</td>
+      <td><button onclick="action('/api/fire/${encodeURIComponent(q.id)}', 'POST')">Fire</button></td>
+    `;
+    tb.appendChild(tr);
+  }
+}
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

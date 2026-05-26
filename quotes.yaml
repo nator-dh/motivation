@@ -1,0 +1,52 @@
+# Motivational quote library.
+#
+# Schedule cheat sheet (5-field cron, evaluated in `defaults.timezone`):
+#   "0 9 * * *"        every day at 09:00
+#   "0 9,13,17 * * *"  09:00, 13:00, 17:00 daily
+#   "*/30 * * * *"     every 30 minutes
+#   "0 10 * * MON-FRI" 10:00 on weekdays
+#   "*/2 * * * *"      every 2 minutes (handy for testing)
+
+defaults:
+  # IANA timezone. Leave empty to use system local time.
+  timezone: ""
+
+# General schedules pick a random quote from the pool at each tick.
+# Use `category` to restrict the pool, or omit it for "anything goes".
+general_schedules:
+  - cron: "0 9,13,17 * * *"
+    category: focus
+  - cron: "30 11 * * MON-FRI"
+
+quotes:
+  - id: marcus-mind
+    text: "You have power over your mind — not outside events. Realize this, and you will find strength."
+    author: Marcus Aurelius
+    categories: [stoic, focus]
+    media: https://en.wikipedia.org/wiki/Meditations
+    schedules:
+      - "0 8 * * MON"
+
+  - id: jobs-stay-hungry
+    text: "Stay hungry. Stay foolish."
+    author: Steve Jobs
+    categories: [drive]
+    media: https://www.youtube.com/watch?v=UF8uR6Z6KLc
+
+  - id: seneca-tomorrow
+    text: "Begin at once to live, and count each separate day as a separate life."
+    author: Seneca
+    categories: [stoic, focus]
+    media: https://en.wikipedia.org/wiki/Seneca_the_Younger
+
+  - id: jordan-fail
+    text: "I've failed over and over and over again in my life. And that is why I succeed."
+    author: Michael Jordan
+    categories: [drive, resilience]
+    media: https://www.youtube.com/watch?v=GuXZFQKKF7A
+
+  - id: feynman-fool
+    text: "The first principle is that you must not fool yourself — and you are the easiest person to fool."
+    author: Richard Feynman
+    categories: [focus, craft]
+    media: https://en.wikipedia.org/wiki/Richard_Feynman
