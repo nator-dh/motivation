@@ -85,9 +85,6 @@ func swapBundleIcon(png: Data) {
 }
 
 final class Delegate: NSObject, UNUserNotificationCenterDelegate {
-    let openURL: String?
-    init(openURL: String?) { self.openURL = openURL }
-
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
@@ -101,7 +98,8 @@ final class Delegate: NSObject, UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        if let s = openURL, let url = URL(string: s) {
+        let info = response.notification.request.content.userInfo
+        if let s = info["openURL"] as? String, let url = URL(string: s) {
             NSWorkspace.shared.open(url)
         }
         completionHandler()
@@ -110,14 +108,19 @@ final class Delegate: NSObject, UNUserNotificationCenterDelegate {
 }
 
 let args = parseArgs()
-if args.title.isEmpty && args.message.isEmpty {
-    FileHandle.standardError.write(Data("usage: motivation-notify -title T -message M [-open URL] [-emoji E] [-no-sound] [-timeout S]\n".utf8))
-    exit(2)
-}
-
 let center = UNUserNotificationCenter.current()
-let delegate = Delegate(openURL: args.openURL)
+let delegate = Delegate()
 center.delegate = delegate
+
+// When macOS relaunches the bundle to deliver a click on a past
+// notification, we get no -title/-message. Stay alive briefly so the
+// delegate can receive the response and open the URL, then exit silently
+// — printing usage and exit(2) here is what triggers the system's
+// "is not open anymore" alert.
+if args.title.isEmpty && args.message.isEmpty {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 3) { exit(0) }
+    RunLoop.main.run()
+}
 
 let authSema = DispatchSemaphore(value: 0)
 center.requestAuthorization(options: [.alert, .sound]) { _, _ in
